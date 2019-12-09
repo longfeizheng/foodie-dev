@@ -73,4 +73,9 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
+
+    @Override
+    public Users queryUserForLogin(String username, String password) {
+        return usersMapper.selectOne(new Users().setUsername(username).setPassword(password));
+    }
 }

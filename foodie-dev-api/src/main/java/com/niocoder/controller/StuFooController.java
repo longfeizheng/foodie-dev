@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by zhenglongfei 2019-12-09.
  *
  * @VERSION 1.0
  */
+@ApiIgnore
 @RestController
 public class StuFooController {
 
