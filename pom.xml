@@ -38,58 +38,50 @@
         <foodie.version>0.0.1-SNAPSHOT</foodie.version>
     </properties>
 
-    <dependencies>
-        <!-- mybatis启动器 -->
+   <!-- <dependencies>
+        &lt;!&ndash; mybatis启动器 &ndash;&gt;
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${mybatis.starter.version}</version>
         </dependency>
-        <!-- 通用Mapper启动器 -->
+        &lt;!&ndash; 通用Mapper启动器 &ndash;&gt;
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>${mapper.starter.version}</version>
         </dependency>
-        <!-- 分页助手启动器 -->
+        &lt;!&ndash; 分页助手启动器 &ndash;&gt;
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pageHelper.starter.version}</version>
         </dependency>
-        <!-- mysql驱动 -->
+        &lt;!&ndash; mysql驱动 &ndash;&gt;
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
-        <!-- lombok -->
+        &lt;!&ndash; lombok &ndash;&gt;
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-        <!-- commons-lang3 工具类 -->
+        &lt;!&ndash; commons-lang3 工具类 &ndash;&gt;
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${common.lang3.version}</version>
         </dependency>
-        <!--FastDFS客户端-->
+        &lt;!&ndash;FastDFS客户端&ndash;&gt;
         <dependency>
             <groupId>com.github.tobato</groupId>
             <artifactId>fastdfs-client</artifactId>
             <version>${fastDFS.client.version}</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+-->
 
 </project>
