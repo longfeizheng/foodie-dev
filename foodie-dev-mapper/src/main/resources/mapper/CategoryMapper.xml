@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niocoder.mapper.CategoryMapper">
+    <resultMap id="CategoryVO" type="com.niocoder.pojo.vo.CategoryVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="fatherId" property="fatherId"/>
+
+        <!--
+            collection标签：用于定义关联的list集合类型的封装规则
+            property：对应三级分类的list属性名
+            ofType：集合的类型，三级分类的VO
+        -->
+        <collection property="subCatList" ofType="com.niocoder.pojo.vo.SubCategoryVO">
+            <id column="subId" property="subId"/>
+            <result column="subName" property="subName"/>
+            <result column="subType" property="subType"/>
+            <result column="subFatherId" property="subFatherId"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="NewItemsVO" type="com.niocoder.pojo.vo.NewItemsVO">
+        <id column="rootCatId" property="rootCatId"/>
+        <result column="rootCatName" property="rootCatName"/>
+        <result column="slogan" property="slogan"/>
+        <result column="catImage" property="catImage"/>
+        <result column="bgColor" property="catImage"/>
+
+        <!--
+            collection标签：用于定义关联的list集合类型的封装规则
+            property：对应三级分类的list属性名
+            ofType：集合的类型，三级分类的VO
+        -->
+        <collection property="simpleItemList" ofType="com.niocoder.pojo.vo.SimpleItemVO">
+            <id column="subId" property="subId"/>
+            <result column="itemId" property="itemId"/>
+            <result column="itemName" property="itemName"/>
+            <result column="itemUrl" property="itemUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByRootCategoryId" parameterType="java.lang.Integer" resultMap="CategoryVO">
+        select a.id        as id,
+               a.name      as name,
+               a.type      as type,
+               a.father_id as fatherId,
+               b.id        as subId,
+               b.name      as subName,
+               b.type      as subType,
+               b.father_id as subFatherId
+        from category a
+                 left join category b
+                           on a.id = b.father_id
+        where a.father_id = #{rootCategoryId};
+    </select>
+
+    <select id="querySixNewItemsLazy" parameterType="Map" resultMap="NewItemsVO">
+        select c.id           as rootCatId,
+               c.name         as rootCatName,
+               c.slogan       as slogan,
+               c.cat_image    as catImage,
+               c.bg_color     as bgColor,
+               i.id           as itemId,
+               i.item_name    as itemName,
+               ii.url         as itemUrl,
+               i.created_time as createdTime
+        from category c
+                 left join items i
+                           on c.id = i.root_cat_id
+                 left join items_img ii
+                           on i.id = ii.item_id
+        where c.type = 1
+          and i.root_cat_id = #{paramsMap.rootCategoryId}
+          and ii.is_main = 1
+        order by i.created_time desc
+        limit 0, 6;
+    </select>
+</mapper>

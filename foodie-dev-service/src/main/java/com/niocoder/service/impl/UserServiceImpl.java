@@ -1,8 +1,8 @@
 package com.niocoder.service.impl;
 
-import com.niocoder.com.niocoder.common.DateUtil;
-import com.niocoder.com.niocoder.common.IdWorker;
-import com.niocoder.com.niocoder.common.MD5Util;
+import com.niocoder.common.DateUtil;
+import com.niocoder.common.IdWorker;
+import com.niocoder.common.MD5Util;
 import com.niocoder.enums.SexEnum;
 import com.niocoder.mapper.UsersMapper;
 import com.niocoder.pojo.Users;

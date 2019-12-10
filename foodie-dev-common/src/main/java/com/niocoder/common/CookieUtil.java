@@ -1,4 +1,4 @@
-package com.niocoder.com.niocoder.common;
+package com.niocoder.common;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

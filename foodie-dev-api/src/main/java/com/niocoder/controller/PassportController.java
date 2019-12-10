@@ -1,9 +1,9 @@
 package com.niocoder.controller;
 
-import com.niocoder.com.niocoder.common.CookieUtil;
-import com.niocoder.com.niocoder.common.GsonUtil;
-import com.niocoder.com.niocoder.common.JSONResult;
-import com.niocoder.com.niocoder.common.MD5Util;
+import com.niocoder.common.CookieUtil;
+import com.niocoder.common.GSONUtil;
+import com.niocoder.common.JSONVO;
+import com.niocoder.common.MD5Util;
 import com.niocoder.enums.ResultEnum;
 import com.niocoder.pojo.Users;
 import com.niocoder.pojo.bo.UserBO;
@@ -44,27 +44,27 @@ public class PassportController {
      */
     @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在", httpMethod = "GET")
     @GetMapping("/usernameIsExist")
-    public JSONResult usernameIsExist(@RequestParam String username) {
+    public JSONVO usernameIsExist(@RequestParam String username) {
 
         log.info("username: [{}]", username);
 
         // 判断用户名不能为空
         if (StringUtils.isEmpty(username)) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
         }
 
         // 查找注册的用户名是否存在
         if (userService.queryUsernameIsExist(username)) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_ALREADY_EXIST.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_ALREADY_EXIST.getMessage());
         }
 
         // 请求成功，用户名没有重复
-        return JSONResult.ok();
+        return JSONVO.ok();
     }
 
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/register")
-    public JSONResult register(@RequestBody UserBO userBO) {
+    public JSONVO register(@RequestBody UserBO userBO) {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPassword = userBO.getConfirmPassword();
@@ -73,28 +73,28 @@ public class PassportController {
         if (StringUtils.isEmpty(username)
                 || StringUtils.isEmpty(password)
                 || StringUtils.isEmpty(confirmPassword)) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
         }
 
         // 查询用户名是否存在
         if (userService.queryUsernameIsExist(username)) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_ALREADY_EXIST.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_ALREADY_EXIST.getMessage());
         }
 
         // 密码长度不能少于6位
         if (password.length() < 6) {
-            return JSONResult.errorMsg(ResultEnum.PASSWORD_LENGTH_INVALID.getMessage());
+            return JSONVO.errorMsg(ResultEnum.PASSWORD_LENGTH_INVALID.getMessage());
         }
 
         // 判断两次密码是否一致
         if (!Objects.equals(password, confirmPassword)) {
-            return JSONResult.errorMsg(ResultEnum.PASSWORD_CONFIRM_NOT_EQUAL.getMessage());
+            return JSONVO.errorMsg(ResultEnum.PASSWORD_CONFIRM_NOT_EQUAL.getMessage());
         }
 
         // 实现注册
         userService.createUser(userBO);
 
-        return JSONResult.ok();
+        return JSONVO.ok();
     }
 
     /**
@@ -102,8 +102,8 @@ public class PassportController {
      */
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
-    public JSONResult login(@RequestBody UserBO userBO, HttpServletRequest request,
-                            HttpServletResponse response) throws NoSuchAlgorithmException {
+    public JSONVO login(@RequestBody UserBO userBO, HttpServletRequest request,
+                        HttpServletResponse response) throws NoSuchAlgorithmException {
         log.info("userBO: [{}]", userBO);
 
         String username = userBO.getUsername();
@@ -111,13 +111,13 @@ public class PassportController {
 
         // 判断用户名和密码必须不为空
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_CANT_EMPTY.getMessage());
         }
 
         // 实现登录
         Users users = userService.queryUserForLogin(username, MD5Util.getMD5Str(password));
         if (users == null) {
-            return JSONResult.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_ERROR.getMessage());
+            return JSONVO.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_ERROR.getMessage());
         }
 
         // 封装用户视图对象
@@ -125,14 +125,14 @@ public class PassportController {
         BeanUtils.copyProperties(users, userVO);
 
         // 设置cookie，cookie值必须被编码，因为cookie值很有可能有违法字符
-        CookieUtil.setCookie(request, response, "user", GsonUtil.obj2String(userVO), true);
+        CookieUtil.setCookie(request, response, "user", GSONUtil.obj2String(userVO), true);
 
-        return JSONResult.ok(users);
+        return JSONVO.ok(users);
     }
 
     @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
     @PostMapping("/logout")
-    public JSONResult logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
+    public JSONVO logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
         log.info("userId: [{}]", userId);
 
         // 清除用户的相关信息的cookie
@@ -141,6 +141,6 @@ public class PassportController {
         // todo 用户退出登录，需要清空购物车
         // todo 分布式会话中需要清除用户数据
 
-        return JSONResult.ok();
+        return JSONVO.ok();
     }
 }

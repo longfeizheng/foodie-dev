@@ -1,4 +1,4 @@
-package com.niocoder.com.niocoder.common;
+package com.niocoder.common;
 
 /**
  * Created by zhenglongfei 2019-12-09.

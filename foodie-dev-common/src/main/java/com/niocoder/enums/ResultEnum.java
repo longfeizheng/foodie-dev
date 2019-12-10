@@ -16,7 +16,8 @@ public enum ResultEnum {
     USERNAME_ALREADY_EXIST(2, "用户名已存在"),
     PASSWORD_LENGTH_INVALID(3, "密码长度不合规"),
     PASSWORD_CONFIRM_NOT_EQUAL(4, "两次密码输入不一致"),
-    USERNAME_OR_PASSWORD_ERROR(5, "用户名或密码输入错误");
+    USERNAME_OR_PASSWORD_ERROR(5, "用户名或密码输入错误"),
+    CATEGORY_IS_NOT_EXIST(6, "分类不存在");
 
     private final Integer code;
     private final String message;

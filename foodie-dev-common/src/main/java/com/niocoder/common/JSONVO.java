@@ -1,4 +1,4 @@
-package com.niocoder.com.niocoder.common;
+package com.niocoder.common;
 
 /**
  * Created by zhenglongfei 2019-12-09.
@@ -22,7 +22,7 @@ import lombok.Data;
  * 556：用户qq校验异常
  */
 @Data
-public class JSONResult {
+public class JSONVO {
     // 定义jackson对象
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -38,60 +38,60 @@ public class JSONResult {
     @JsonIgnore
     private String ok;    // 不使用
 
-    public static JSONResult build(Integer status, String msg, Object data) {
-        return new JSONResult(status, msg, data);
+    public static JSONVO build(Integer status, String msg, Object data) {
+        return new JSONVO(status, msg, data);
     }
 
-    public static JSONResult build(Integer status, String msg, Object data, String ok) {
-        return new JSONResult(status, msg, data, ok);
+    public static JSONVO build(Integer status, String msg, Object data, String ok) {
+        return new JSONVO(status, msg, data, ok);
     }
 
-    public static JSONResult ok(Object data) {
-        return new JSONResult(data);
+    public static JSONVO ok(Object data) {
+        return new JSONVO(data);
     }
 
-    public static JSONResult ok() {
-        return new JSONResult(null);
+    public static JSONVO ok() {
+        return new JSONVO(null);
     }
 
-    public static JSONResult errorMsg(String msg) {
-        return new JSONResult(500, msg, null);
+    public static JSONVO errorMsg(String msg) {
+        return new JSONVO(500, msg, null);
     }
 
-    public static JSONResult errorMap(Object data) {
-        return new JSONResult(501, "error", data);
+    public static JSONVO errorMap(Object data) {
+        return new JSONVO(501, "error", data);
     }
 
-    public static JSONResult errorTokenMsg(String msg) {
-        return new JSONResult(502, msg, null);
+    public static JSONVO errorTokenMsg(String msg) {
+        return new JSONVO(502, msg, null);
     }
 
-    public static JSONResult errorException(String msg) {
-        return new JSONResult(555, msg, null);
+    public static JSONVO errorException(String msg) {
+        return new JSONVO(555, msg, null);
     }
 
-    public static JSONResult errorUserQQ(String msg) {
-        return new JSONResult(556, msg, null);
+    public static JSONVO errorUserQQ(String msg) {
+        return new JSONVO(556, msg, null);
     }
 
-    public JSONResult() {
+    public JSONVO() {
 
     }
 
-    public JSONResult(Integer status, String msg, Object data) {
+    public JSONVO(Integer status, String msg, Object data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
     }
 
-    public JSONResult(Integer status, String msg, Object data, String ok) {
+    public JSONVO(Integer status, String msg, Object data, String ok) {
         this.status = status;
         this.msg = msg;
         this.data = data;
         this.ok = ok;
     }
 
-    public JSONResult(Object data) {
+    public JSONVO(Object data) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;

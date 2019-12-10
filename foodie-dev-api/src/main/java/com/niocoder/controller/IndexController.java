@@ -1,15 +1,21 @@
 package com.niocoder.controller;
 
-import com.niocoder.com.niocoder.common.JSONResult;
+import com.niocoder.common.JSONVO;
+import com.niocoder.enums.ResultEnum;
 import com.niocoder.enums.YesNoEnum;
 import com.niocoder.pojo.Carousel;
 import com.niocoder.pojo.Category;
+import com.niocoder.pojo.vo.CategoryVO;
+import com.niocoder.pojo.vo.NewItemsVO;
 import com.niocoder.service.CarouselService;
 import com.niocoder.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +29,7 @@ import java.util.List;
 @Api(value = "首页", tags = {"首页展示的相关接口"})
 @RestController
 @RequestMapping("/index")
+@Slf4j
 public class IndexController {
 
     @Autowired
@@ -35,9 +42,9 @@ public class IndexController {
      */
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
-    public JSONResult carouse() {
+    public JSONVO carouse() {
         List<Carousel> carouselList = carouselService.queryAll(YesNoEnum.YES.getType());
-        return JSONResult.ok(carouselList);
+        return JSONVO.ok(carouselList);
     }
 
     /**
@@ -47,8 +54,43 @@ public class IndexController {
      */
     @ApiOperation(value = "获取商品分类（一级分类）", notes = "获取商品分类（一级分类）", httpMethod = "GET")
     @GetMapping("/cats")
-    public JSONResult categories() {
+    public JSONVO categories() {
         List<Category> categoryList = categoryService.queryAllRootLevelCategory();
-        return JSONResult.ok(categoryList);
+        return JSONVO.ok(categoryList);
+    }
+
+    /**
+     * 子分类
+     *
+     * @param rootCatId 一级分类id
+     */
+    @ApiOperation(value = "获取商品子分类", notes = "获取商品子分类", httpMethod = "GET")
+    @GetMapping("/subCat/{rootCatId}")
+    public JSONVO subCategory(
+            @ApiParam(name = "rootCatId", value = "一级分类id", required = true)
+            @PathVariable(name = "rootCatId") Integer rootCatId) {
+        log.info("rootCatId: [{}]", rootCatId);
+
+        if (rootCatId == null) {
+            return JSONVO.errorMap(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
+        }
+
+        List<CategoryVO> categoryVOList = categoryService.querySubCategoryList(rootCatId);
+        return JSONVO.ok(categoryVOList);
+    }
+
+    @ApiOperation(value = "查询每个一级分类下的最新6条商品数据", notes = "查询每个一级分类下的最新6条商品数据", httpMethod = "GET")
+    @GetMapping("/sixNewItems/{rootCatId}")
+    public JSONVO sixNewItems(
+            @ApiParam(name = "rootCatId", value = "一级分类id", required = true)
+            @PathVariable(name = "rootCatId") Integer rootCatId) {
+        log.info("rootCatId: [{}]", rootCatId);
+
+        if (rootCatId == null) {
+            return JSONVO.errorMap(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
+        }
+
+        List<NewItemsVO> newItemsVOList = categoryService.querySixNewItemsLazy(rootCatId);
+        return JSONVO.ok(newItemsVOList);
     }
 }

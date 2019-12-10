@@ -1,4 +1,4 @@
-package com.niocoder.com.niocoder.common;
+package com.niocoder.common;
 
 import org.apache.commons.lang3.StringUtils;
 

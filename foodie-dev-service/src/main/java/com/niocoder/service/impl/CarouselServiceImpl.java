@@ -5,6 +5,7 @@ import com.niocoder.pojo.Carousel;
 import com.niocoder.service.CarouselService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @VERSION 1.0
  */
 @Service
+@Transactional
 public class CarouselServiceImpl implements CarouselService {
 
     @Autowired

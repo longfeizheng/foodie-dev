@@ -1,4 +1,4 @@
-package com.niocoder.com.niocoder.common;
+package com.niocoder.common;
 
 import com.google.gson.Gson;
 
@@ -7,7 +7,7 @@ import com.google.gson.Gson;
  *
  * @VERSION 1.0
  */
-public class GsonUtil {
+public class GSONUtil {
 
     private static final Gson gson = new Gson();
 
