@@ -1,6 +1,7 @@
 package com.niocoder.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.niocoder.common.DesensitizationUtil;
 import com.niocoder.common.PagingGridVO;
 import com.niocoder.converter.PageInfo2PagingGridResultConverter;
@@ -9,6 +10,7 @@ import com.niocoder.mapper.*;
 import com.niocoder.pojo.*;
 import com.niocoder.pojo.vo.CommentLevelCountVO;
 import com.niocoder.pojo.vo.ItemCommentVO;
+import com.niocoder.pojo.vo.ShopCartVO;
 import com.niocoder.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,6 +89,44 @@ public class ItemServiceImpl implements ItemService {
             itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname()));
         }
         return PageInfo2PagingGridResultConverter.convert(itemCommentVOList, page);
+    }
+
+    @Override
+    public PagingGridVO queryItem(String keyword, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("keyword", keyword);
+        map.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+        return PageInfo2PagingGridResultConverter.convert(itemsMapper.selectItem(map), page);
+    }
+
+    @Override
+    public PagingGridVO queryItem(Integer categoryId, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("categoryId", categoryId);
+        map.put("sort", sort);
+
+        PageHelper.startPage(page, pageSize);
+        return PageInfo2PagingGridResultConverter.convert(itemsMapper.selectItemByThirdCategory(map), page);
+    }
+
+    @Override
+    public List<ShopCartVO> queryItemsBySpecIds(String specIds) {
+        String[] idArr = specIds.split(",");
+        List<String> specIdList = Lists.newArrayList(idArr);
+
+        return itemsMapper.selectItemBySpecIdList(specIdList);
+    }
+
+    @Override
+    public ItemsSpec queryItemSpecById(String specId) {
+        return itemsSpecMapper.selectByPrimaryKey(specId);
+    }
+
+    @Override
+    public ItemsImg queryItemMainImageById(String itemId) {
+        return itemsImgMapper.selectOne(new ItemsImg().setItemId(itemId));
     }
 
     int selectCommentCount(String itemId, int level) {

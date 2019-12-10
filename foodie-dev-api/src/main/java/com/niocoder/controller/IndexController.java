@@ -72,7 +72,7 @@ public class IndexController {
         log.info("rootCatId: [{}]", rootCatId);
 
         if (rootCatId == null) {
-            return JSONVO.errorMap(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
+            return JSONVO.errorMag(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
         }
 
         List<CategoryVO> categoryVOList = categoryService.querySubCategoryList(rootCatId);
@@ -87,7 +87,7 @@ public class IndexController {
         log.info("rootCatId: [{}]", rootCatId);
 
         if (rootCatId == null) {
-            return JSONVO.errorMap(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
+            return JSONVO.errorMag(ResultEnum.CATEGORY_IS_NOT_EXIST.getMessage());
         }
 
         List<NewItemsVO> newItemsVOList = categoryService.querySixNewItemsLazy(rootCatId);

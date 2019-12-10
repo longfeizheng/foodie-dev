@@ -58,7 +58,7 @@ public class JSONVO {
         return new JSONVO(500, msg, null);
     }
 
-    public static JSONVO errorMap(Object data) {
+    public static JSONVO errorMag(Object data) {
         return new JSONVO(501, "error", data);
     }
 

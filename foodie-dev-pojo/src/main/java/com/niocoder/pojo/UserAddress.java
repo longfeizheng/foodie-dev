@@ -1,5 +1,6 @@
 package com.niocoder.pojo;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,7 +17,8 @@ import java.util.Date;
 @Data
 @Table(name = "user_address")
 @Accessors(chain = true)
-public class UserAddress  implements Serializable {
+@Builder
+public class UserAddress implements Serializable {
     private static final long serialVersionUID = -6768431801160960553L;
 
     @Id
@@ -43,5 +45,9 @@ public class UserAddress  implements Serializable {
     private Date createdTime;
 
     private Date updatedTime;
+
+    public UserAddress() {
+
+    }
 
 }

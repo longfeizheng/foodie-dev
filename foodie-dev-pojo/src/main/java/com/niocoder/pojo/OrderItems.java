@@ -1,5 +1,6 @@
 package com.niocoder.pojo;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @Data
 @Table(name = "order_Items")
 @Accessors(chain = true)
+@Builder
 public class OrderItems  implements Serializable {
     private static final long serialVersionUID = -4620611461195375302L;
 

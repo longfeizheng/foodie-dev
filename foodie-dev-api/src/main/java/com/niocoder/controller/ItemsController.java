@@ -103,4 +103,66 @@ public class ItemsController {
         PagingGridVO pagingGridResult = itemService.queryPagingComment(itemId, level, page, pageSize);
         return JSONVO.ok(pagingGridResult);
     }
+
+    /**
+     * 商品列表
+     */
+    @ApiOperation(value = "查询商品列表", notes = "查询商品列表", httpMethod = "GET")
+    @GetMapping("/search")
+    public JSONVO search(
+            @ApiParam(name = "keywords", value = "关键字", required = true)
+            @RequestParam(name = "keywords") String keyword,
+            @ApiParam(name = "sort", value = "排序")
+            @RequestParam String sort,
+            @ApiParam(name = "page", value = "查询第几页")
+            @RequestParam(defaultValue = "1") Integer page,
+            @ApiParam(name = "pageSize", value = "分页的每一页显示的条数")
+            @RequestParam(defaultValue = "20") Integer pageSize) {
+        log.info("keyword: [{}], sort: [{}]", keyword, sort);
+        log.info("page: [{}], pageSize: [{}]", page, pageSize);
+
+        if (StringUtils.isEmpty(keyword)) {
+            return JSONVO.errorMsg(null);
+        }
+
+        return JSONVO.ok(itemService.queryItem(keyword, sort, page, pageSize));
+    }
+
+    /**
+     * 分类的商品列表
+     */
+    @ApiOperation(value = "通过分类Id搜索商品列表", notes = "通过分类Id搜索商品列表", httpMethod = "GET")
+    @GetMapping("/catItems")
+    public JSONVO categoryItem(
+            @ApiParam(name = "catId", value = "三级分类Id", required = true)
+            @RequestParam(name = "catId") Integer categoryId,
+            @ApiParam(name = "sort", value = "排序")
+            @RequestParam String sort,
+            @ApiParam(name = "page", value = "查询第几页")
+            @RequestParam(defaultValue = "1") Integer page,
+            @ApiParam(name = "pageSize", value = "分页的每一页显示的条数")
+            @RequestParam(defaultValue = "20") Integer pageSize) {
+        log.info("categoryId: [{}], sort: [{}]", categoryId, sort);
+        log.info("page: [{}], pageSize: [{}]", page, pageSize);
+
+
+        return JSONVO.ok(itemService.queryItem(categoryId, sort, page, pageSize));
+    }
+
+    /**
+     * 刷新购物车
+     */
+    @ApiOperation(value = "根据商品规格Ids查找最新的商品数据", notes = "根据商品规格Ids查找最新的商品数据", httpMethod = "GET")
+    @GetMapping("/refresh")
+    public JSONVO refresh(
+            @ApiParam(name = "itemSpecIds", value = "拼接的规格ids", required = true, example = "1001,1003,1005")
+            @RequestParam String itemSpecIds) {
+        log.info("itemSpecIds: [{}]", itemSpecIds);
+
+        if (StringUtils.isEmpty(itemSpecIds)) {
+            return JSONVO.ok();
+        }
+
+        return JSONVO.ok(itemService.queryItemsBySpecIds(itemSpecIds));
+    }
 }

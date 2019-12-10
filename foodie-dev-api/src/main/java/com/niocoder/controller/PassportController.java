@@ -127,6 +127,7 @@ public class PassportController {
         // 设置cookie，cookie值必须被编码，因为cookie值很有可能有违法字符
         CookieUtil.setCookie(request, response, "user", GSONUtil.obj2String(userVO), true);
 
+
         return JSONVO.ok(users);
     }
 
