@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    ​
+    <springProperty scope="context" name="service" source="spring.application.name"/>
+    <springProperty scope="context" name="env" source="spring.profiles"/>
+
+    <property name="logfile" value="/export/Logs/${service}/${service}_"/>​
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%X{request_id}] %clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="info_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logfile}info.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%X{request_id}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile}info.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="error_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logfile}error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%X{request_id}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile}error.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="info_file"/>
+        </root>
+        <logger name="com.niocoder" level="debug"/>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="info_file"/>
+        </root>
+        <logger name="com.niocoder" level="info"/>
+    </springProfile>
+
+    <springProfile name="pro">
+        <root level="info">
+            <appender-ref ref="info_file"/>
+            <appender-ref ref="error_file"/>
+        </root>
+        <logger name="com.niocoder" level="info"/>
+    </springProfile>
+
+</configuration>

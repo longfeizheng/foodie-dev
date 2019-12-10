@@ -1,18 +1,24 @@
 package com.niocoder.controller;
 
+import com.niocoder.com.niocoder.common.CookieUtil;
+import com.niocoder.com.niocoder.common.GsonUtil;
 import com.niocoder.com.niocoder.common.JSONResult;
 import com.niocoder.com.niocoder.common.MD5Util;
 import com.niocoder.enums.ResultEnum;
 import com.niocoder.pojo.Users;
 import com.niocoder.pojo.bo.UserBO;
+import com.niocoder.pojo.vo.UserVO;
 import com.niocoder.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
@@ -55,6 +61,7 @@ public class PassportController {
         // 请求成功，用户名没有重复
         return JSONResult.ok();
     }
+
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/register")
     public JSONResult register(@RequestBody UserBO userBO) {
@@ -95,7 +102,8 @@ public class PassportController {
      */
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
-    public JSONResult login(@RequestBody UserBO userBO) throws NoSuchAlgorithmException {
+    public JSONResult login(@RequestBody UserBO userBO, HttpServletRequest request,
+                            HttpServletResponse response) throws NoSuchAlgorithmException {
         log.info("userBO: [{}]", userBO);
 
         String username = userBO.getUsername();
@@ -112,6 +120,27 @@ public class PassportController {
             return JSONResult.errorMsg(ResultEnum.USERNAME_OR_PASSWORD_ERROR.getMessage());
         }
 
+        // 封装用户视图对象
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(users, userVO);
+
+        // 设置cookie，cookie值必须被编码，因为cookie值很有可能有违法字符
+        CookieUtil.setCookie(request, response, "user", GsonUtil.obj2String(userVO), true);
+
         return JSONResult.ok(users);
+    }
+
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
+        log.info("userId: [{}]", userId);
+
+        // 清除用户的相关信息的cookie
+        CookieUtil.deleteCookie(request, response, "user");
+
+        // todo 用户退出登录，需要清空购物车
+        // todo 分布式会话中需要清除用户数据
+
+        return JSONResult.ok();
     }
 }
